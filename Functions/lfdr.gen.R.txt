@@ -1,0 +1,35 @@
+lfdr.gen = function ( Z , gamma   )
+{
+  
+  zv.ds <- density ( Z , from = min(Z) - 10 , to = max(Z) + 5 , n=1000)
+
+  zv.ds <- lin.itp ( Z , zv.ds$x , zv.ds$y )
+
+  z.null <- dnorm ( Z )
+  
+ #kol <- EstNull.func ( Z , l)
+ 
+  if(gamma==0){
+  
+  mu = 0
+  
+  s = 1
+  
+  } else {
+ 
+  est.null <- EstNull.func(Z,gamma)
+  
+  mu <- est.null$mu
+  
+  s <- est.null$s
+  
+  }
+
+  p <-  jin.cai.pi0 ( Z , mu , s )
+
+  locfdr <- ( 1 - p ) * z.null / zv.ds
+  
+  locfdr [ which ( locfdr > 1 ) ] <- rep ( 1 , length ( which ( locfdr > 1 ) ) )
+  
+  locfdr
+}

@@ -1,0 +1,64 @@
+LfdrI = function ( lfdr , alpha , beta)
+{
+  
+  m <- length ( lfdr )
+  
+  slfdr <- sort ( lfdr )
+  
+  or.lfdr <- order( lfdr )
+  
+  k = 1
+  
+  while ( sum ( slfdr [ 1:k ] ) / k <= alpha && k <= m ) {
+    
+    k = k + 1
+    
+  }
+  
+  k = k - 1
+  
+  potal <- ifelse ( k < m , slfdr [ k + 1 ] , 1 )
+  
+  #rej.hypo <- which ( lfdr < potal )
+  
+  if (k==0){
+  
+  rej.hypo <- c()
+  
+  } else{
+  
+  rej.hypo <- or.lfdr[1:k]
+  
+  }
+  
+  
+  
+  l = 1
+  
+  while ( sum ( 1 - slfdr [ ( m - l + 1 ) : m ] ) / l <=  beta  && l <= m ) {
+    
+    l = l + 1
+    
+  }
+  
+  l = l - 1
+  
+  potnull <- ifelse ( l < m , slfdr [ m - l ] , 0 )
+  
+  #acc.hypo <- which ( lfdr > potnull )
+  
+   if (l==0){
+  
+  acc.hypo <- c()
+  
+  } else{
+  
+  acc.hypo <- or.lfdr[m-l+1:l]
+  
+  }
+  
+  
+  
+  return ( list ( accrej = c ( k , l ) , cutoff = c ( potal , potnull ) , rej.hypo = rej.hypo , acc.hypo = acc.hypo ) )
+  
+}
