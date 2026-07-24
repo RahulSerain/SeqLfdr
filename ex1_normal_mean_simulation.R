@@ -1,3 +1,22 @@
+###############################################################
+# Example 1: Normal Mean Testing
+#
+# Corresponds to:
+#   Example 1 (Ex1), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: X ~ N(0,1)
+#   H1: X ~ N(0.25,1)
+#
+# This script performs the simulation study for Example 1
+# and compares the OI, DI, Gap-sb and Gap-ao procedures.
+#
+# Required code:
+#   norm.hypo.R
+###############################################################
+
+
 
 library ( parallel )
 
