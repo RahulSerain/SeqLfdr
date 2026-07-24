@@ -14,7 +14,7 @@
 # Intersection (DI) procedures.
 #
 # Required code:
-#   normal_mean_hypothesis.R
+#   norm.hypo.R
 #
 # Output:
 #   A vector containing:
