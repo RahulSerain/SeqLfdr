@@ -10,12 +10,19 @@
 #   H1: X ~ N(0.25,1)
 #
 # This script performs the simulation study for Example 1
-# and compares the OI, DI, Gap-sb and Gap-ao procedures.
+# using the Oracle Intersection (OI) and Data-driven
+# Intersection (DI) procedures.
 #
 # Required code:
-#   norm.hypo.R
+#   normal_mean_hypothesis.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the OI and DI procedures,
+#     • Monte Carlo standard errors of these estimates,
+#     • Total execution time of the simulation.
 ###############################################################
-
 
 
 library ( parallel )
