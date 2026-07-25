@@ -1,3 +1,30 @@
+###############################################################
+# Example 4: Bernoulli Testing
+#
+# Corresponds to:
+#   Example 4 (Ex4), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: X ~ Bernoulli(0.10)
+#   H1: X ~ Bernoulli(0.15)
+#
+# This script performs the simulation study for Example 4
+# using the Oracle Intersection (OI) and Data-driven
+# Intersection (DI) procedures.
+#
+# Required code:
+#   Bern.Hypo.alt.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the OI and DI procedures,
+#     • Monte Carlo standard errors of these estimates.
+#
+###############################################################
+
+
 library(parallel)
 
 ncore <- detectCores() - 2
@@ -57,11 +84,5 @@ bern.test <- function(x){
 }
 
 r <- apply(mat, 1, bern.test)
-
-write.csv(
-  t(r),
-  "bern.oracle.values.csv",
-  row.names = FALSE
-)
 
 stopCluster(cl)
