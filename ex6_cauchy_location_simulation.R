@@ -1,3 +1,30 @@
+###############################################################
+# Example 6: Cauchy Location Testing
+#
+# Corresponds to:
+#   Example 6 (Ex6), Table 2
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: X ~ Cauchy(0,1)
+#   H1: X ~ Cauchy(0.25,1)
+#
+# This script performs the simulation study for Example 6
+# using the Data-driven Intersection (DI) procedure.
+#
+# Required code:
+#   cauchy.hypo.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the DI procedure,
+#     • Monte Carlo standard errors of these estimates.
+#
+# The simulation results are saved as:
+#     cauchy.values.csv
+###############################################################
+
 library ( parallel )
 
 ncore = detectCores ( ) - 2
