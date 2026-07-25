@@ -1,3 +1,27 @@
+###############################################################
+# Example 5: One-sample Student's t-test
+#
+# Corresponds to:
+#   Example 5 (Ex5), Table 2
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: μ = 0
+#   H1: μ ∈ {0.5, 1, -1}
+#
+# This script performs the simulation study for Example 5
+# using the Data-driven Intersection (DI) procedure.
+#
+# Required code:
+#   t test.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the DI procedure,
+#     • Monte Carlo standard errors of these estimates.
+###############################################################
+
 
 library(parallel)
 
