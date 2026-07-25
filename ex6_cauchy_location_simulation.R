@@ -21,8 +21,6 @@
 #       for the DI procedure,
 #     • Monte Carlo standard errors of these estimates.
 #
-# The simulation results are saved as:
-#     cauchy.values.csv
 ###############################################################
 
 library ( parallel )
@@ -80,8 +78,6 @@ t1 <- Sys.time()
 t1
 
 r <- apply ( mat , 1 , norm.test )
-
-write.csv(t(r),"cauchy.values.csv")
 
 stopCluster(cl)
 
