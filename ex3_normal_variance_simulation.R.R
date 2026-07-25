@@ -1,3 +1,30 @@
+###############################################################
+# Example 3: Normal Variance Testing
+#
+# Corresponds to:
+#   Example 3 (Ex3), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: X ~ N(0,1)
+#   H1: X ~ N(0,1.2^2)
+#
+# This script performs the simulation study for Example 3
+# using the Oracle Intersection (OI) and Data-driven
+# Intersection (DI) procedures.
+#
+# Required code:
+#   Norm.sigma.hypo.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the OI and DI procedures,
+#     • Monte Carlo standard errors of these estimates.
+###############################################################
+
+
+
 library ( parallel )
 
 ncore = detectCores ( ) - 2
@@ -30,9 +57,11 @@ clusterEvalQ ( cl , {
   
 } )
 
+Nrep <- 200
+
 time.s <- Sys.time ( )
 
-r1 <- parSapply ( cl , 1 : 200 , function ( i , ... ) { x <- norm.sigma.hypo  ( 5000 , 0.8 , 40 , 0 , 1 , 1, 1.2 , 0.05 , 0.1 )  } )
+r1 <- parSapply ( cl , 1 : Nrep , function ( i , ... ) { x <- norm.sigma.hypo  ( 5000 , 0.8 , 40 , 0 , 1 , 1, 1.2 , 0.05 , 0.1 )  } )
 
 time.f <- Sys.time ( )
 
@@ -40,7 +69,7 @@ time.f - time.s
 
 #5000 , 0.8
 
-c ( rowMeans ( r1 ) , apply ( r1 , 1 , sd ) / sqrt ( 200 ))
+c ( rowMeans ( r1 ) , apply ( r1 , 1 , sd ) / sqrt ( Nrep ))
 
 stopCluster(cl)
 #100 0.2 9.029500e+01 4.246615e-02 1.021313e-01 5.016864e-02 9.966253e-02 1.015750e+02 5.632569e-02 9.618740e-02 8.731308e-02 9.103071e-02 1.074576e+00 4.722288e-03 1.709120e-03 4.823900e-03 1.710065e-03 4.284637e+00 6.436263e-03 3.635164e-03 1.069340e-02 3.932883e-03
