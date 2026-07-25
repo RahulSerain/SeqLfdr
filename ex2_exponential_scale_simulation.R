@@ -1,3 +1,29 @@
+###############################################################
+# Example 2: Exponential Scale Testing
+#
+# Corresponds to:
+#   Example 2 (Ex2), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: X ~ Exp(1)
+#   H1: X ~ Exp(1.2)
+#
+# This script performs the simulation study for Example 2
+# using the Oracle Intersection (OI) and Data-driven
+# Intersection (DI) procedures.
+#
+# Required code:
+#   exp.hypo.R
+#
+# Output:
+#   A vector containing:
+#     • Monte Carlo estimates of ASN, FDR and FNR
+#       for the OI and DI procedures,
+#     • Monte Carlo standard errors of these estimates.
+###############################################################
+
+
 
 library ( parallel )
 
