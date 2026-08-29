@@ -29,6 +29,22 @@ cl = makeCluster ( ncore )
 clusterSetRNGStream(cl, 12345)
 
 clusterEvalQ (cl,{
+ 
+  source("Functions/EstNull.func.R.txt")
+  
+  source("Functions/epsest.func.R.txt")
+  
+  source("Functions/lin.itp.R.txt")
+  
+  source("Functions/adpt.cutz.R.txt")
+  
+  source("Functions/adaptZ.func.R.txt")
+  
+  source("Functions/Seq.adap.txt")
+  
+  source("Functions/lfdr.gen.R.txt")
+  
+  source("Functions/jin.cai.pi0.R.txt")
   
   source("Aadaptz.t.2side.R")
   
