@@ -1,5 +1,5 @@
 ###############################################################
-# Example: Two-sample Student's t-test
+# Example: Two-sample t-test
 #
 # Problem:
 #   Sequential large-scale multiple testing for
