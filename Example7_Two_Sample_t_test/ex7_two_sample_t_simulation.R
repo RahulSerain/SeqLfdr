@@ -46,7 +46,7 @@ clusterEvalQ (cl,{
   
   source("Functions/jin.cai.pi0.R.txt")
   
-  source("Aadaptz.t.2side.R")
+  source("t.2sample.R")
   
 })
 
