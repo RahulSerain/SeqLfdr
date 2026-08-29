@@ -1,190 +1,276 @@
+###############################################################
+# Two-Sample F-Test: Oracle Sequential Multiple Testing
+#
+# Statistical model:
+#   H0: sigma1^2 = sigma0^2
+#   H1: sigma1^2 != sigma0^2
+#
+# The F statistic is based on the ratio of the two sample
+# variances.
+###############################################################
 
-dat.gen = function ( theta , mu0 , mu1 , sigma0 , sigma1) {
+
+# =============================================================
+# 1. DATA GENERATION
+# =============================================================
+
+dat.gen <- function(theta, mu0, mu1, sigma0, sigma1) {
   
-  m <- length ( theta )
+  m <- length(theta)
   
-  X <- (1-theta) * rnorm ( m , mu0 , sigma0 ) + theta * rnorm ( m , mu1 , sigma1 ) 
+  X <- (1 - theta) * rnorm(m, mu0, sigma0) +
+       theta * rnorm(m, mu1, sigma1)
   
-  return ( X )
-  
+  return(X)
 }
 
 
-f_val <- function ( x , n  ) {
+# =============================================================
+# 2. GENERATE n OBSERVATIONS
+# =============================================================
+
+data.gen.n <- function(theta, mu0, mu1, sigma0, sigma1, n) {
   
-  x1 <- x [ 1 : n ]
-  
-  x2 <- x [ ( n + 1 ) : length ( x ) ]
-  
-  n1 <- length ( x1 )
-  
-  n2 <- length ( x2 )
-  
-  #t <- ( mean ( x2 ) - mean ( x1 ) ) / (sqrt ( ( ( n1 - 1 ) * ( sd ( x1 ) ) ^ 2 + ( n2 - 1 ) * ( sd ( x2 ) ) ^ 2 ) / ( n1 + n2 - 2 ) )*sqrt(1/n1+1/n2))
-  
-  f <- var ( x1 ) / var ( x2 )
-  
-  f
-  
+  replicate(
+    n,
+    dat.gen(theta, mu0, mu1, sigma0, sigma1)
+  )
 }
 
-f.val.x = function ( X1 , X2  ) {
+
+# =============================================================
+# 3. ADD ONE NEW OBSERVATION
+# =============================================================
+
+data.gen.x <- function(theta, mu0, mu1, sigma0, sigma1, X) {
   
-  X <- cbind ( X1 , X2 )
+  u <- dat.gen(theta, mu0, mu1, sigma0, sigma1)
   
-  n <- ncol (X1)
+  cbind(X, u)
+}
+
+
+# =============================================================
+# 4. F TEST STATISTIC
+# =============================================================
+
+test.stat <- function(x, n1) {
   
-  f.v <- function(x){
-    
-    f_val(x,n)
-    
+  x1 <- x[1:n1]
+  x2 <- x[(n1 + 1):length(x)]
+  
+  f <- var(x1) / var(x2)
+  
+  return(f)
+}
+
+
+f.val.x <- function(X1, X2) {
+  
+  X <- cbind(X1, X2)
+  n1 <- ncol(X1)
+  
+  f.s <- function(x) {
+    test.stat(x, n1)
   }
   
-  apply ( X , 1 , f.v )
-  
+  apply(X, 1, f.s)
 }
 
 
-data.gen.n = function ( theta , mu0 , mu1 , sigma0 , sigma1 ,  n) {
+# =============================================================
+# 5. TRANSFORMATION TO Z-SCORE
+# =============================================================
+
+z_score <- function(f, n1, n2) {
   
-  replicate ( n , dat.gen ( theta , mu0 , mu1 , sigma0 , sigma1 ) ) 
-  
+  qnorm(pf(f, n1 - 1, n2 - 1))
 }
 
 
-data.gen.x = function ( theta , mu0 , mu1 , sigma0 , sigma1 , X ) {
-  
-  u <-  dat.gen ( theta , mu0 , mu1 , sigma0 , sigma1 ) 
-  
-  cbind ( X , u )
-  
-}
+# =============================================================
+# 6. LOCAL FALSE DISCOVERY RATE
+# =============================================================
 
-p.func <- function ( t , n1 , n2 , sigma0 , sigma1 ) {
+lfdr.f <- function(f, n1, n2, sigma0, sigma1, p) {
   
-   if ( sigma1 > sigma0 ) {
-    
-    p <- 1 - pt ( t , ( n - 2 ) )
-    
-  } else if ( mu1 < mu0 ) {
-    
-    p <- pt ( t , ( n - 2 ) )
-    
-  } 
+  g <- (sigma1 / sigma0)^2 * f
   
-  return(p)
+  num <- (1 - p) * df(f, n1 - 1, n2 - 1)
   
-}
-
-z.func <- function ( f , n1 , n2 ) {
+  den <- p * df(g, n1 - 1, n2 - 1)
   
-  qnorm ( pf ( f , n1-1 , n2-1 ) )
+  lfr <- num / (num + den)
   
+  return(lfr)
 }
 
 
-lfdr.f <- function (f , n1, n2, sigma0, sigma1, p) {
+# =============================================================
+# 7. ORACLE SEQUENTIAL F TEST
+# =============================================================
 
-  g <- ( sigma1 / sigma0 )^2*f
+f.test.or <- function(
+  m, p, n, p1,
+  mu0, mu1,
+  sigma0, sigma1,
+  alpha, beta
+) {
   
-  num <- (1-p)* df ( f , n1-1 , n2-1 )
+  # -----------------------------------------------------------
+  # Generate truth indicators
+  # -----------------------------------------------------------
   
-  den <- p * df ( g , n1-1 , n2-1 )
+  theta <- rbinom(m, 1, p)
   
-  l <- num / ( num + den )
   
-  l
+  # -----------------------------------------------------------
+  # Generate initial sample sizes
+  # -----------------------------------------------------------
   
-}
-
-f.test.or <- function (m , p ,n , p1 , mu0 , mu1 , sigma0 , sigma1 , alpha , beta ) {
+  r <- 0
   
-  theta <- rbinom ( m , 1 , p ) 
-  
-  r = 0
-  
-  while(r <= 1  || r >= ( n - 1 ) ) {
+  while(r <= 1 || r >= (n - 1)) {
     
-    r <- rbinom ( 1 , n , p1 )
-    
-    n = n + 1
-    
+    r <- rbinom(1, n, p1)
+    n <- n + 1
   }
   
-  n = n - 1
+  n <- n - 1
   
-  X1 <- replicate ( n - r , rnorm ( m , mu0 , sigma0 ) )
+  
+  # -----------------------------------------------------------
+  # Generate initial observations
+  # -----------------------------------------------------------
+  
+  X1 <- replicate(
+    n - r,
+    rnorm(m, mu0, sigma0)
+  )
+  
+  X2 <- data.gen.n(
+    theta,
+    mu0, mu1,
+    sigma0, sigma1,
+    r
+  )
+  
+  
+  # -----------------------------------------------------------
+  # Calculate F statistic
+  # -----------------------------------------------------------
+  
+  f <- f.val.x(X1, X2)
+  
+  n1 <- ncol(X1)
+  n2 <- ncol(X2)
+  
+  
+  # -----------------------------------------------------------
+  # Calculate local FDR
+  # -----------------------------------------------------------
+  
+  lfdr1 <- lfdr.f(
+    f,
+    n1, n2,
+    sigma0, sigma1,
+    p
+  )
+  
+  
+  # -----------------------------------------------------------
+  # Apply LfdrI rule
+  # -----------------------------------------------------------
+  
+  lf <- LfdrI(lfdr1, alpha, beta)
+  
+  del <- lf$cutoff[1] - lf$cutoff[2]
+  
+  
+  # -----------------------------------------------------------
+  # Continue sampling until stopping criterion is satisfied
+  # -----------------------------------------------------------
+  
+  while(del <= 0) {
     
-  X2 <- data.gen.n ( theta , mu0 , mu1 , sigma0 , sigma1 , r) 
+    n <- n + 1
     
-  f <- f.val.x ( X1 , X2 )
-  
-  n1 <- ncol (X1)
-  
-  n2 <- ncol (X2)
-  
-  #z1 = z.func ( f , n1 , n2  )
-  
-  lfdr1 <- lfdr.f (f , n1, n2, sigma0, sigma1, p)
-  
-  lf <- LfdrI ( lfdr1 , alpha , beta )
-  
-  del <- lf $ cutoff [ 1 ] - lf $ cutoff [ 2 ]
-  
-  while ( del <= 0 ) {
+    r <- rbinom(1, 1, p1)
     
-    n = n+1
-    
-    r <- rbinom(1,1,p1)
-    
-    if ( r == 0 ) {
+    if(r == 0) {
       
-      X1 <- cbind ( X1 , rnorm ( m , mu0 , sigma0 ) )
+      X1 <- cbind(
+        X1,
+        rnorm(m, mu0, sigma0)
+      )
       
     } else {
       
-      X2 <- data.gen.x ( theta , mu0 , mu1 ,  sigma0 ,sigma1 , X2 ) 
-      
+      X2 <- data.gen.x(
+        theta,
+        mu0, mu1,
+        sigma0, sigma1,
+        X2
+      )
     }
     
-    f <- f.val.x ( X1 , X2 )
     
-    n1 <- ncol (X1)
+    # Recalculate F statistic
     
-    n2 <- ncol (X2)
+    f <- f.val.x(X1, X2)
     
-    #z1 <- z.func ( f , n1 , n2 )
+    n1 <- ncol(X1)
+    n2 <- ncol(X2)
     
-    lfdr1 <- lfdr.f (f , n1, n2, sigma0, sigma1, p)
     
-    lf <- LfdrI ( lfdr1 , alpha , beta )
+    # Recalculate LFDR
     
-    del <- lf $ cutoff [ 1 ] - lf $ cutoff [ 2 ]
+    lfdr1 <- lfdr.f(
+      f,
+      n1, n2,
+      sigma0, sigma1,
+      p
+    )
     
-    print(c ( n , del ))#, jin.cai.pi0(z1,0,1)))
+    
+    # Reapply LfdrI
+    
+    lf <- LfdrI(
+      lfdr1,
+      alpha, beta
+    )
+    
+    del <- lf$cutoff[1] - lf$cutoff[2]
   }
   
-  #theta1 <- 1 - theta [ 1 , ]
   
-  D1 = rep ( 0 , m )
+  # -----------------------------------------------------------
+  # Calculate FDR and FNR
+  # -----------------------------------------------------------
   
-  D1 [ lf $ rej.hypo ] <-  rep ( 1 , length ( lf $ rej.hypo ) )
+  D1 <- rep(0, m)
   
-  fr1 <- sum ( D1 > theta) / max (sum ( D1 ) , 1 )
+  D1[lf$rej.hypo] <- 1
   
-  fn1 <- sum (D1 < theta) / max ( sum ( 1 - D1 ), 1 )
+  fdr1 <- sum(D1 > theta) /
+          max(sum(D1), 1)
   
-  D2 = rep ( 1 , m )
+  fnr1 <- sum(D1 < theta) /
+          max(sum(1 - D1), 1)
   
-  D2 [ lf $ acc.hypo ] <-  rep ( 0 , length ( lf $ acc.hypo ) )
   
-  fr2 <- sum ( D2 > theta) / max (sum ( D2 ) , 1 )
+  D2 <- rep(1, m)
   
-  fn2 <- sum (D2 < theta) / max ( sum ( 1 - D2 ), 1 )
+  D2[lf$acc.hypo] <- 0
   
-  c( n , fr1 , fn1  , fr2 , fn2 ) 
+  fdr2 <- sum(D2 > theta) /
+          max(sum(D2), 1)
   
+  fnr2 <- sum(D2 < theta) /
+          max(sum(1 - D2), 1)
+  
+  
+  return(
+    c(n, fdr1, fnr1, fdr2, fnr2)
+  )
 }
-
-
-
