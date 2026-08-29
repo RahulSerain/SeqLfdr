@@ -1,3 +1,83 @@
+###############################################################
+# Example 6: Cauchy Location Testing
+#
+# Corresponds to:
+#   Example 6 (Ex6), Table 2
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: μ = μ0
+#   H1: μ = μ1
+#
+# This file contains the data-generation functions, test
+# statistic and main simulation function for the Cauchy
+# location testing problem using the Data-driven
+# Intersection (DI) procedure.
+#
+# Main function:
+#   cauchy.hypo(m, p, n, mu0, mu1, alpha, beta, W)
+#
+# Parameters:
+#   m     - number of hypotheses
+#   p     - proportion of hypotheses under the alternative
+#   n     - initial number of observations per hypothesis
+#   mu0   - location parameter under the null hypothesis
+#   mu1   - location parameter under the alternative hypothesis
+#   alpha - target false discovery rate
+#   beta  - target false non-discovery rate
+#   W     - matrix of reference values used to obtain the
+#           empirical distribution of the test statistic
+#
+# Procedure:
+#   The Data-driven Intersection (DI) procedure is applied
+#   sequentially. The Cauchy likelihood-ratio statistic is
+#   transformed using its empirical distribution, and the
+#   resulting normal scores are used to estimate the local-FDR.
+#
+# Functions:
+#   data.generate()    - Generates one observation for each
+#                        hypothesis from the corresponding
+#                        Cauchy distribution.
+#
+#   data.generate.n()  - Generates n observations for each
+#                        hypothesis.
+#
+#   data.generate.x()  - Adds one new observation to the
+#                        existing observations.
+#
+#   test.stat()        - Calculates the log-likelihood ratio
+#                        statistic between the alternative and
+#                        null Cauchy distributions.
+#
+#   z_score()          - Converts the test statistic to a
+#                        normal score using its empirical
+#                        distribution.
+#
+#   or.lfr()           - Calculates the oracle local false
+#                        discovery rate. This function is
+#                        retained for reference and is not used
+#                        in the active DI simulation.
+#
+#   cauchy.hypo()      - Performs the sequential DI procedure
+#                        and calculates its operating
+#                        characteristics.
+#
+# Output of cauchy.hypo():
+#   • final sample size,
+#   • FDR and FNR for the rejection decision,
+#   • FDR and FNR for the acceptance decision.
+#
+# Required functions:
+#   lfdr.gen()
+#   LfdrI()
+#
+# These functions are sourced from the common Functions/
+# directory by the simulation driver.
+#
+# Additional input:
+#   W must contain the reference values required by z_score()
+#   for the corresponding sample sizes.
+###############################################################
 #m <- 2000;  p <- 0.2 ; n<-20 ; mu0 = 0 ; mu1 = 0.25 ; alpha = 0.05 ; beta = 0.1
 data.generate <- function ( theta , mu1 , mu0 ) {
   
