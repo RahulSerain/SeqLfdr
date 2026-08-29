@@ -1,4 +1,66 @@
-
+###############################################################
+# Example 2: Exponential Scale Testing
+#
+# Corresponds to:
+#   Example 2 (Ex2), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: μ = μ0
+#   H1: μ = μ1
+#
+# This file contains the data-generation functions and the
+# main simulation function for the Exponential Scale testing
+# problem.
+#
+# Main function:
+#   exp.hypo(m, p, n, mu0, mu1, alpha, beta)
+#
+# Parameters:
+#   m     - number of hypotheses
+#   p     - proportion of hypotheses under the alternative
+#   n     - initial number of observations per hypothesis
+#   mu0   - scale parameter under the null hypothesis
+#   mu1   - scale parameter under the alternative hypothesis
+#   alpha - target false discovery rate
+#   beta  - target false non-discovery rate
+#
+# The simulation compares:
+#   • the data-driven local-FDR procedure, and
+#   • the oracle local-FDR procedure.
+#
+# Functions:
+#   data.generate()    - Generates one observation for each
+#                        hypothesis from the corresponding
+#                        exponential distribution.
+#
+#   data.generate.n()  - Generates n observations for each
+#                        hypothesis.
+#
+#   data.generate.x()  - Adds one new observation to the
+#                        existing observations.
+#
+#   z_score()          - Calculates the test statistic and
+#                        its normal transformation.
+#
+#   or.lfr()           - Calculates the oracle local false
+#                        discovery rate.
+#
+#   exp.hypo()         - Performs the sequential simulation
+#                        and calculates the operating
+#                        characteristics of the procedures.
+#
+# Output of exp.hypo():
+#   • sample size, FDR and FNR for the data-driven procedure,
+#   • sample size, FDR and FNR for the oracle procedure.
+#
+# Required functions:
+#   lfdr.gen()
+#   LfdrI()
+#
+# These functions are sourced from the common Functions/
+# directory by the simulation driver.
+###############################################################
 data.generate <- function ( theta , mu1 , mu0 ) {
   
   m <- length ( theta )  
