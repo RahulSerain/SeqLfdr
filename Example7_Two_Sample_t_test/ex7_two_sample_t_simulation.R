@@ -11,7 +11,7 @@
 # local-FDR-based procedure.
 #
 # Required code:
-#   Aadaptz.t.2side.R
+#   t.2sample.R
 #
 # Output:
 #   A vector containing:
