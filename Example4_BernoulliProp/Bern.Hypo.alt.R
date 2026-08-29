@@ -1,3 +1,74 @@
+###############################################################
+# Example 4: Bernoulli Testing
+#
+# Corresponds to:
+#   Example 4 (Ex4), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for Bernoulli
+#   observations under
+#   H0: π = π0
+#   H1: π = π1
+#
+# This file contains the data-generation functions and the
+# main simulation function for the Bernoulli testing problem.
+#
+# Main function:
+#   bern.hypo.or(m, p, m1, pi0, pi1, n, alpha, beta)
+#
+# Parameters:
+#   m     - number of hypotheses
+#   p     - proportion of hypotheses under the alternative
+#   m1    - number of Bernoulli trials generated at each
+#           observation time
+#   pi0   - success probability under the null hypothesis
+#   pi1   - success probability under the alternative hypothesis
+#   n     - initial number of observations per hypothesis
+#   alpha - target false discovery rate
+#   beta  - target false non-discovery rate
+#
+# The simulation uses the known null and alternative
+# distributions to calculate the oracle local-FDR and applies
+# the intersection procedure to determine rejection and
+# acceptance decisions.
+#
+# Functions:
+#   data.generate()    - Generates one observation for each
+#                        hypothesis from the corresponding
+#                        Bernoulli model.
+#
+#   data.generate.n()  - Generates n observations for each
+#                        hypothesis.
+#
+#   data.generate.x()  - Adds one new observation to the
+#                        existing observations.
+#
+#   z_score()          - Calculates the standardized test
+#                        statistic.
+#
+#   LfdrI1()            - Determines rejection and acceptance
+#                        sets from the local-FDR values.
+#
+#   or.lfr()            - Calculates the oracle local false
+#                        discovery rate.
+#
+#   bern.hypo.or()      - Performs the sequential simulation
+#                        and calculates the operating
+#                        characteristics of the oracle
+#                        procedure.
+#
+# Output of bern.hypo.or():
+#   • sample size, FDR and FNR for the rejection decision,
+#   • sample size, FDR and FNR for the acceptance decision,
+#   • corresponding results for the two stopping criteria.
+#
+# Required functions:
+#   No external functions from the common Functions/
+#   directory are required by the main function.
+#
+# The script also contains commented simulation settings
+# and previously obtained simulation results.
+###############################################################
 #if (!require("BiocManager", quietly = TRUE))
 #  install.packages("BiocManager")
 
