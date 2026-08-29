@@ -1,3 +1,50 @@
+###############################################################
+# Example: Two-sided Two-sample Student's t-test
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: μ = μ0
+#   H1: μ ∈ {μ1, μ2}
+#
+# This script implements the two-sided two-sample Student's
+# t-test using the Data-driven Intersection (DI) procedure.
+#
+# The test statistic is the pooled two-sample Student's
+# t-statistic, based on k observations from each group.
+#
+# The t-statistic is transformed to a z-score using its
+# Student's t distribution. The local false discovery rates
+# are estimated from the observed z-scores using lfdr.gen().
+# The adaptive rejection cutoff is then obtained using
+# adpt.cutz().
+#
+# Procedure:
+#   Data-driven Intersection (DI) procedure
+#
+# Required code:
+#   lfdr.gen.R.txt
+#   adpt.cutz.R.txt
+#
+# Main function:
+#   two.side.t.or.sc()
+#
+# Parameters:
+#   m       : Number of hypotheses
+#   p       : Vector of proportions corresponding to
+#             μ0, μ1 and μ2
+#   k       : Initial sample size for each group
+#   mu0     : Mean under the null hypothesis
+#   mu1     : First alternative mean
+#   mu2     : Second alternative mean
+#   alpha   : Target false discovery rate level
+#
+# Output:
+#   A vector containing:
+#     • Total sample size n = 2k at stopping
+#     • False Discovery Rate (FDR)
+#     • False Non-discovery Rate (FNR)
+#
+###############################################################
 dat.gen = function ( theta , mu0 , mu1 , mu2 ) {
   
   theta1 <- theta[1,]
