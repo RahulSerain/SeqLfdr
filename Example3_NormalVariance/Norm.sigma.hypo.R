@@ -1,22 +1,72 @@
-library(parallel)
 
-
-# setwd("C:/Users/royr2/OneDrive/Simulation")
-# source("EstNull.func.R.txt")
-# 
-# source("epsest.func.R.txt")
-# 
-# source("lin.itp.R.txt")
-# 
-# source("adpt.cutz.R.txt")
-# 
-# source("adaptZ.func.R.txt")
-# 
-# source("Seq.adap.txt")
-# 
-# source("lfdr.gen.R.txt")
-# 
-# source("jin.cai.pi0.R.txt")
+###############################################################
+# Example 3: Normal Variance Testing
+#
+# Corresponds to:
+#   Example 3 (Ex3), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: σ = σ0
+#   H1: σ = σ1
+#
+# This file contains the data-generation functions and the
+# main simulation function for the Normal Variance testing
+# problem.
+#
+# Main function:
+#   norm.sigma.hypo(m, p, n, mu0, mu1, sigma0, sigma1,
+#                   alpha, beta)
+#
+# Parameters:
+#   m     - number of hypotheses
+#   p     - proportion of hypotheses under the alternative
+#   n     - initial number of observations per hypothesis
+#   mu0   - mean under the null hypothesis
+#   mu1   - mean under the alternative hypothesis
+#   sigma0 - standard deviation under the null hypothesis
+#   sigma1 - standard deviation under the alternative hypothesis
+#   alpha - target false discovery rate
+#   beta  - target false non-discovery rate
+#
+# The simulation compares:
+#   • the data-driven local-FDR procedure, and
+#   • the oracle local-FDR procedure.
+#
+# Functions:
+#   dat.gen()           - Generates one observation for each
+#                        hypothesis.
+#
+#   data.generate.n()  - Generates n observations for each
+#                        hypothesis.
+#
+#   data.generate.x()  - Adds one new observation to the
+#                        existing observations.
+#
+#   test.stat()         - Calculates the test statistic based
+#                        on the sample variance.
+#
+#   or.lfr()            - Calculates the oracle local false
+#                        discovery rate.
+#
+#   z_score()           - Transforms the test statistic to a
+#                        normal score.
+#
+#   norm.sigma.hypo()   - Performs the sequential simulation
+#                        and calculates the operating
+#                        characteristics of the procedures.
+#
+# Output of norm.sigma.hypo():
+#   • sample size, FDR and FNR for the data-driven procedure,
+#   • sample size, FDR and FNR for the oracle procedure.
+#
+# Required functions:
+#   lfdr.gen()
+#   LfdrI()
+#
+# These functions are sourced from the common Functions/
+# directory by the simulation driver.
+###############################################################
 
 dat.gen = function ( theta , mu0 , mu1 , sigma0 , sigma1) {
   
