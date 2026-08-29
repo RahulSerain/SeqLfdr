@@ -1,4 +1,64 @@
-#m <- 2000;  p <- 0.2 ; n<-20 ; mu0 = 0 ; mu1 = 0.25 ; alpha = 0.05 ; beta = 0.1
+###############################################################
+# Example 1: Normal Mean Testing
+#
+# Corresponds to:
+#   Example 1 (Ex1), Table 1
+#
+# Problem:
+#   Sequential large-scale multiple testing for
+#   H0: μ = μ0
+#   H1: μ = μ1
+#
+# This file contains the data-generation functions and the
+# main simulation function for the Normal Mean testing problem.
+#
+# Main function:
+#   norm.hypo(m, p, n, mu0, mu1, alpha, beta)
+#
+# Parameters:
+#   m     - number of hypotheses
+#   p     - proportion of hypotheses under the alternative
+#   n     - initial number of observations per hypothesis
+#   mu0   - mean under the null hypothesis
+#   mu1   - mean under the alternative hypothesis
+#   alpha - target false discovery rate
+#   beta  - target false non-discovery rate
+#
+# The simulation compares:
+#   • the data-driven local-FDR procedure, and
+#   • the oracle local-FDR procedure.
+#
+# Functions:
+#   data.generate()    - Generates one observation for each
+#                        hypothesis.
+#
+#   data.generate.n() - Generates n observations for each
+#                        hypothesis.
+#
+#   data.generate.x() - Adds one new observation to the
+#                        existing observations.
+#
+#   z_score()          - Calculates the standardized test
+#                        statistic.
+#
+#   or.lfr()           - Calculates the oracle local
+#                        false discovery rate.
+#
+#   norm.hypo()        - Performs the sequential simulation
+#                        and calculates the operating
+#                        characteristics of the procedures.
+#
+# Output of norm.hypo():
+#   • sample size, FDR and FNR for the data-driven procedure,
+#   • sample size, FDR and FNR for the oracle procedure.
+#
+# Required functions:
+#   lfdr.gen()
+#   LfdrI()
+#
+# These functions are sourced from the common Functions/
+# directory by the simulation driver.
+###############################################################
 data.generate <- function ( theta , mu1 , mu0 ) {
   
   m <- length ( theta )  
